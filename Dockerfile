@@ -1,17 +1,12 @@
-FROM python:3.11
-
-# System deps for WeasyPrint (PDF generation)
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    libpango1.0-dev \
-    libcairo2 \
-    libgdk-pixbuf2.0-0 \
-    fonts-liberation \
-    && rm -rf /var/lib/apt/lists/*
+FROM python:3.11-slim
 
 WORKDIR /app
 
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+
+# Install Python deps — WeasyPrint is excluded for production (PDF optional)
+# Users can download Markdown; PDF works locally where system libs are available
+RUN pip install --no-cache-dir $(grep -v weasyprint requirements.txt | grep -v '^#' | grep -v '^$')
 
 COPY . .
 
