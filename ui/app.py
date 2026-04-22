@@ -418,14 +418,14 @@ if generate_btn and raw_text and raw_text.strip():
             _render_skeleton(output_placeholder)
             gen = ReportGenerator()
             markdown_report, pdf_path = gen.render(
-                    grounded,
-                    analyst_name=analyst_name or "[ANALYST NAME]",
-                    incident_id=incident_id or "[INCIDENT-ID]",
-                    classification=classification,
-                    generate_pdf=generate_pdf,
-                )
-                if pdf_path and pdf_path.exists():
-                    pdf_bytes = pdf_path.read_bytes()
+                grounded,
+                analyst_name=analyst_name or "[ANALYST NAME]",
+                incident_id=incident_id or "[INCIDENT-ID]",
+                classification=classification,
+                generate_pdf=generate_pdf,
+            )
+            if pdf_path and pdf_path.exists():
+                pdf_bytes = pdf_path.read_bytes()
         statuses[3] = "done"
         _render_stepper(statuses)
 
