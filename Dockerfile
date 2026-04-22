@@ -2,11 +2,9 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-COPY requirements.txt .
-
-# Install Python deps — WeasyPrint is excluded for production (PDF optional)
-# Users can download Markdown; PDF works locally where system libs are available
-RUN pip install --no-cache-dir $(grep -v weasyprint requirements.txt | grep -v '^#' | grep -v '^$')
+# Production deps — WeasyPrint excluded (PDF optional, avoids heavy system libs)
+COPY requirements-prod.txt .
+RUN pip install --no-cache-dir -r requirements-prod.txt
 
 COPY . .
 
