@@ -120,6 +120,22 @@ div[data-testid="stDownloadButton"]>button:hover{background:#30363d!important;co
 .irw-empty i{font-size:2.8rem;color:#21262d;}
 .irw-empty p{font-size:0.87rem;color:#30363d;margin:0;}
 
+/* Skeleton loader */
+@keyframes shimmer{0%{background-position:-600px 0}100%{background-position:600px 0}}
+.skeleton{background:linear-gradient(90deg,#161b22 25%,#21262d 50%,#161b22 75%);background-size:600px 100%;animation:shimmer 1.4s infinite linear;border-radius:4px;}
+.skeleton-header{height:24px;width:55%;margin-bottom:16px;}
+.skeleton-line{height:13px;margin-bottom:10px;}
+.skeleton-line.w100{width:100%;}
+.skeleton-line.w85{width:85%;}
+.skeleton-line.w70{width:70%;}
+.skeleton-line.w45{width:45%;}
+.skeleton-line.w30{width:30%;}
+.skeleton-block{height:80px;width:100%;margin-bottom:14px;border-radius:6px;}
+.skeleton-table-row{height:32px;width:100%;margin-bottom:6px;border-radius:3px;}
+.skeleton-badge{height:22px;width:100px;border-radius:20px;display:inline-block;margin-right:8px;}
+.skeleton-metric{height:60px;width:100%;border-radius:7px;}
+.irw-skeleton-wrap{padding:0;}
+
 /* Callouts */
 .cw{background:#2a1e00;border-left:3px solid #d2a90a;border-radius:4px;padding:7px 11px;font-size:0.81rem;color:#d2a90a;margin:5px 0;}
 .ce{background:#2a0a0a;border-left:3px solid #f85149;border-radius:4px;padding:7px 11px;font-size:0.81rem;color:#f85149;margin:5px 0;}
@@ -191,6 +207,28 @@ _STEP_ICONS = {
 }
 
 stepper_placeholder = st.empty()
+
+
+_SKELETON_HTML = (
+    '<div class="irw-skeleton-wrap">'
+    '<div class="skeleton skeleton-badge"></div>'
+    '<div style="height:8px"></div>'
+    '<div style="display:flex;gap:8px;margin-bottom:14px">'
+    + "".join(f'<div style="flex:1"><div class="skeleton skeleton-metric"></div></div>' for _ in range(4))
+    + '</div>'
+    '<div class="skeleton skeleton-header"></div>'
+    + "".join(f'<div class="skeleton skeleton-line w{w}"></div>' for w in ["100","85","70","100","85","45"])
+    + '<div class="skeleton skeleton-block"></div>'
+    + "".join(f'<div class="skeleton skeleton-table-row"></div>' for _ in range(5))
+    + '</div>'
+)
+
+
+def _render_skeleton(placeholder) -> None:
+    placeholder.markdown(
+        f'<div class="irw-report">{_SKELETON_HTML}</div>',
+        unsafe_allow_html=True,
+    )
 
 
 def _render_stepper(statuses: list[str]) -> None:
@@ -339,6 +377,10 @@ if generate_btn and raw_text and raw_text.strip():
     pdf_bytes: bytes | None = None
     grounded = None
 
+    # Show skeleton loader immediately
+    with right_col:
+        _render_skeleton(output_placeholder)
+
     try:
         llm_client = LLMClient.from_env()
 
@@ -349,13 +391,13 @@ if generate_btn and raw_text and raw_text.strip():
         statuses[0] = "done"
         _render_stepper(statuses)
 
-        # Step 2 — Timeline
+        # Step 2 — Timeline (refresh skeleton to indicate LLM working)
         statuses[1] = "running"
         _render_stepper(statuses)
         with right_col:
-            with st.spinner("Reconstructing attack timeline…"):
-                timeline_agent = TimelineAgent(client=llm_client)
-                timeline = timeline_agent.run(schema)
+            _render_skeleton(output_placeholder)
+            timeline_agent = TimelineAgent(client=llm_client)
+            timeline = timeline_agent.run(schema)
         statuses[1] = "done"
         _render_stepper(statuses)
 
@@ -363,9 +405,9 @@ if generate_btn and raw_text and raw_text.strip():
         statuses[2] = "running"
         _render_stepper(statuses)
         with right_col:
-            with st.spinner("Running grounding verification…"):
-                verifier = GroundingVerifier(client=llm_client)
-                grounded = verifier.run(schema, timeline)
+            _render_skeleton(output_placeholder)
+            verifier = GroundingVerifier(client=llm_client)
+            grounded = verifier.run(schema, timeline)
         statuses[2] = "warn" if (grounded.unsupported_removed > 0 or grounded.uncertain_count > 0) else "done"
         _render_stepper(statuses)
 
@@ -373,9 +415,9 @@ if generate_btn and raw_text and raw_text.strip():
         statuses[3] = "running"
         _render_stepper(statuses)
         with right_col:
-            with st.spinner("Rendering report…"):
-                gen = ReportGenerator()
-                markdown_report, pdf_path = gen.render(
+            _render_skeleton(output_placeholder)
+            gen = ReportGenerator()
+            markdown_report, pdf_path = gen.render(
                     grounded,
                     analyst_name=analyst_name or "[ANALYST NAME]",
                     incident_id=incident_id or "[INCIDENT-ID]",
