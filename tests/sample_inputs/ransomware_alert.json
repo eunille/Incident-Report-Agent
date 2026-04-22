@@ -1,0 +1,42 @@
+{
+  "results": [
+    {
+      "_time": "2026-04-15T02:14:33Z",
+      "host": "WORKSTATION-42",
+      "sourcetype": "WinEventLog:Security",
+      "EventCode": 4624,
+      "message": "An account was successfully logged on. Account Name: jsmith. Logon Type: 3 (Network). Source IP: 185.220.101.45",
+      "source": "Splunk-EDR"
+    },
+    {
+      "_time": "2026-04-15T02:17:11Z",
+      "host": "WORKSTATION-42",
+      "sourcetype": "WinEventLog:Security",
+      "EventCode": 4698,
+      "message": "A scheduled task was created. Task Name: \\Microsoft\\Windows\\SysUpdate. Command: powershell.exe -enc JABjAGwAaQBlAG4AdA...",
+      "source": "Splunk-EDR"
+    },
+    {
+      "_time": "2026-04-15T02:31:47Z",
+      "host": "FILE-SERVER-01",
+      "sourcetype": "endpoint:filesystem",
+      "EventCode": 11,
+      "message": "File created: C:\\Windows\\Temp\\payload.exe (SHA256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855)",
+      "source": "Splunk-EDR"
+    },
+    {
+      "_time": "2026-04-15T02:33:02Z",
+      "host": "FILE-SERVER-01",
+      "sourcetype": "endpoint:process",
+      "message": "Process executed: payload.exe spawned cmd.exe /c vssadmin delete shadows /all /quiet",
+      "source": "Splunk-EDR"
+    },
+    {
+      "_time": "2026-04-15T02:44:19Z",
+      "host": "FILE-SERVER-01",
+      "sourcetype": "endpoint:filesystem",
+      "message": "Mass file rename detected: 847 files renamed with extension .locked within 90 seconds",
+      "source": "Splunk-EDR"
+    }
+  ]
+}

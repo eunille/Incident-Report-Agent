@@ -1,0 +1,36 @@
+# Environment & secrets — NEVER commit these
+.env
+*.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Generated reports (output files)
+reports/output/
+*.pdf
+!tests/fixtures/*.pdf
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Test cache
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Streamlit
+.streamlit/secrets.toml

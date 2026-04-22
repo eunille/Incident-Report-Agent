@@ -1,0 +1,22 @@
+Analyst: M. Reyes
+Date: 2026-04-20
+Incident ID: INC-2026-0420-001
+Classification: Suspected Insider Threat / Data Exfiltration
+
+Initial call came in at 10:15 from the HR Director flagging that a departing employee (username: dlee) had been seen copying files to a personal USB drive on April 19.
+
+I pulled DLP logs and confirmed the following:
+- 10:47 AM on April 19 — USB mass storage device inserted on workstation CORP-WS-019 (user dlee)
+- Between 10:47 and 11:23 — approx. 4.2 GB of data copied. File types: .xlsx, .pdf, .docx — consistent with finance and HR records.
+- 11:24 AM — USB device removed.
+
+No AV alerts triggered. No network exfil indicators at this time, but I haven't checked cloud sync logs yet.
+
+The employee's badge access shows he was in the building from 10:30 to 11:45 on April 19. His last day was supposed to be April 18 — HR confirmed he was granted a one-day extension to "hand over projects."
+
+Account dlee still active as of time of writing (2026-04-20 10:30 AM). I've recommended immediate account suspension pending investigation. Waiting on manager approval.
+
+Open questions:
+- Was any data synced to OneDrive or Google Drive before USB copy?
+- Who approved the one-day access extension and was IT notified?
+- Are there earlier exfil events in the past 2 weeks?
